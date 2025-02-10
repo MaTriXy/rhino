@@ -5,8 +5,9 @@
 .project text
 *.html text
 *.htm text
-*.java text
-*.js text
+*.java text eol=lf
+*.js text eol=lf
+*.jstest text eol=lf
 *.jsp text
 *.php text
 *.properties text
@@ -19,9 +20,8 @@
 *.mk text
 *.tests text
 *.doctest text
-gradlew text
-manifest text
-LIST text
+/man/*.1 text
+/gradlew text
 
 *.bmp binary
 *.gif binary

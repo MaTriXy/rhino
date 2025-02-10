@@ -1,5 +1,637 @@
+# Rhino 1.8.0
+## January 2, 2025
+
+Rhino 1.8.0 contains some significant changes, so we're incrementing the final version number for the first time in a very long time. Here are a few highlights:
+
+* Rhino now requires Java 11 minimum. We currently test against Java 11, 17, and 21.
+* Rhino has been broken down into individual Java modules that are properly encapsulated as Java Modules. See [README.md](https://github.com/mozilla/rhino/blob/master/README.md) for a breakdown of which modules are which -- short answer is that everyone will need the "rhino" module and many will need others.
+* Older code not able to adapt to using multiple JARS can still use the "rhino-all" module, which publishes an "all-in-one" JAR like the old "rhino.jar".
+* The default language level is "VERSION_ES6". That means that modern JavaScript features supported by Rhino will work by default.
+* There are big improvements in compatibility, including support for "super", reflect and proxy, and lots of other language features. See the [compatibility table](https://mozilla.github.io/rhino/compat/engines.html) for the details.
+
+Thanks to all who contributed -- we had 24 contributors to this release, with some new contributors who added significant capabilities. Please keep the contributions and attention coming!
+
+# Rhino 1.7.15
+## May 3, 2024
+
+Highlights of this release include:
+
+* Basic support for "rest parameters"
+* Improvements in Unicode support
+* "Symbol.species" implemented in many places
+* More correct property ordering in many places
+* And many more improvements and bug fixes
+
+This release includes committs from 29 different committers. Thanks to you all for your help!
+
+# Rhino 1.7.14
+## January 6, 2022
+
+# Highlights
+## Features
+#### ECMAScript features
+* #160 Promise support (@gbrail)
+* #837 BigInt support (@tuchida)
+* #243 Template Literal support (@p-bakker)
+* #879 String.raw (@tonygermano)
+* #977 JSON superset (@tuchida)
+* #932 globalThis (@p-bakker)
+* #838 Exponential operator (@tuchida)
+* #853 Short-hand property names (@tuchida)
+* #902 Object.values / Object.entries / Object.fromEntries (@rPraml)
+* #883 Number.EPSILON (@tonygermano)
+
+#### Non-ECMAScript features
+* #153 stack property on Error Constructor (@gbrail)
+* #888 support for Mozilla-styled Stack formatting (@rbri)
+
+[All features](https://github.com/mozilla/rhino/issues?q=milestone%3A%22Release+1.7.14%22+label%3Afeature+is%3Aclosed)
+
+## Bugs
+[All bug fixes](https://github.com/mozilla/rhino/issues?q=milestone%3A%22Release+1.7.14%22+label%3Abug)
+
+## Performance
+[All performance enhancements](https://github.com/mozilla/rhino/issues?q=milestone%3A%22Release+1.7.14%22+label%3APerformance)
+
+## Java Interop
+* #839 JavaScript for-of loop support for Java Iterables (@tuchida)
+* #860 / #857 JSON.stringify support on Java Objects (@tonygermano / @rPraml)
+* #1031 delete operator and .length setting support in JavaScript on Java Lists (@rPraml)
+* #901 java.util.subList() support on JavaScript Arrays in Java (@rPraml)
+* #889 Automatically increase size of Java List instances on .put(...) if required (@rPraml)
+
+[All Java Interop related cases](https://github.com/mozilla/rhino/issues?q=milestone%3A%22Release+1.7.14%22+label%3A%22Java+Interop%22)
+
+## Embedding Rhino
+* #864 Context now implements Closable (@gbrail)
+* #865 Introduction of LambdaFunction and LambdaConstructor, to be used to represent Java lambda functions as native JavaScript functions and also can be used to construct an entire class out of lambdas (@gbrail)
+* #911 Throw InternalError instead of wrapped JavaException if thrown Java Exception class is not visible due to class shutter (@youngj)
+
+[All Rhino embedding related cases](https://github.com/mozilla/rhino/issues?q=milestone%3A%22Release+1.7.14%22+label%3A%22embedding+Rhino%22+)
+
+## Test262 suite
+* Running against a much newer version of Test262 suite
+* Improved documentation for running the Test262 suite + more options to make running the tests easier & faster
+* #930 Support added for automatically regenerating the test262.properties file based on actual passage of tests
+* #930 Improved feedback about reason of test failures
+
+## Distribution
+* #873 Automatic module names
+
+## Internals
+* #878 Removed idSwitch
+* #896 SlotMap and Slot refactoring
+* #922 Started extracting logic related to Abstract Operations as defined by the ECMAScript specification 
+
+## Misc.
+* #661 Rhino now listed in the [kangax ES6 Compatibility table](https://kangax.github.io/compat-table/es6) (must select the `Show obsolete platforms` in the upperleft corner)
+* #661 Rhino now available as a compilation target in Babel through @babel/preset-env:
+```
+{
+  "targets": {
+    "rhino": "1.7.13"
+  }
+}
+```
+* Introduced Java Code Formatting through spotless
+* Moved to CircleCI (instead of Travis)
+* Enabled Gitlab CI, running tests on multiple Java versions'
+  
+## Thanks!
+
+This release contains more than 350 commits from 23 contributors. Thanks to everyone who helped!
+
+# Rhino 1.7.13
+## September 2, 2020
+
+### Script Engine support
+
+Now that Nashorn has been deprecated, a number of people have asked about using
+Rhino with the standard Java "ScriptEngine" interface. This release supports that.
+
+However, in order to avoid breaking existing code, the script engine is
+shipped in a separate JAR. Use the "rhino-engine" jar along with the
+standard "rhino" jar to include this feature.
+
+### Generator Support
+
+This release supports generators based on the ES6-standard "function *"
+syntaxt.
+
+### Other important changes
+
+This release also includes a number of quality and consistency fixes from five contributors.
+As always, check out the [compatibility table](http://mozilla.github.io/rhino/compat/engines.html)
+to see where Rhino stands today.
+
+Gregory Brail (18):
+*     Start on 1.7.13.
+*     Add a build config for CircleCi.
+*     Upgrade Gradle version to 6.5.
+*     Update max workers.
+*     Add support for ES6 generators.
+*     Make "GeneratorFunction" pattern work in interpreted mode.
+*     Complete implementation of GeneratorFunction.
+*     Diagnostics to discover test timeouts.
+*     Implement standard Java ScriptEngine
+*     Change MozillaSuiteBenchmark to not fork threads.
+*     Try to improve performance of MozillaSuiteTest
+*     Disable some very slow tests
+*     Start using JMH for benchmarks.
+*     Many small fixes suggested by FindBugs and other linters
+*     Turn off all the Mozilla tests that use the "BigO" function.
+*     Move "BodyCodegen" into a file with the appropriate name.
+*     Add feature flag for changes to Function.__proto__
+*     Make __proto__ more closely match the spec
+
+Karl Tauber (2):
+*     Debugger fixes for FlatLaf (https://github.com/JFormDesigner/FlatLaf): - make renderer tree row height same as table row height - increase monospaced font size in script source and evaluation view if L&F uses larger font - remove renderer tree border if L&F sets one (built in L&F do not)
+*     Debugger: fix NPE in variables view when expanding "CallSite"
+
+Sylvain Jermini (7):
+*     improve java.util.{List,Map} interop
+*     travis: switch from trusty to xenial + set explicit -Xss in tests
+*     try to fix circle, increase Xss
+*     Fix failing string.trim.doctest in java11.
+*     NativeDate: DateFormat, use explicit pattern, has the default has changed from java8 to 9. See https://stackoverflow.com/q/53317365
+*     add java11 to travis test matrix
+*     various fixes so the javadoc linter is happy
+
+hjx胡继续 (2):
+*     Add String.fromCodePoint()
+*     fromCharCode optimize
+
+ian4hu (5):
+*     Add String.prototype.trimStart String.prototype.strimEnd
+*     style: code style
+*     test: string test with hex code instead of literal
+*     remove unused StringBuilder
+*     fix tests in test262/built-ins/String/fromCodePoint/*
+
+leela52452 (1):
+*     fix OWASP Cheat Sheet markdown format
+
+RBRi (48):
+*     switch value and done
+*     make some method protected to support rhino-external implementations
+*     NativeArrayBuffer slice() length is 2
+*     fix String.indexOf and String.includes when searching for an empty st… (#747)
+*     fix string.split with limit 0
+*     fix for issue #665 (maybe we have to adjust the version switch to version 1_6)
+*     fix for the recursion detection when converting an array into a string
+*     fix #670
+*     add testcase for issue #656
+*     Symbol.length is 0 fixes #648
+*     add testcase for issue #651
+*     fix type o the expected value
+*     improve seal() and freeze() processing; fixes #174
+*     An error should be thrown when defining a property for a read-only variable in strict mode fixes 573
+*     code cleanup
+*     Do not save/share an instance of NativeArrayBuffer in a static variable. This introduces really strange side effects, because the instance is available (and changeable) from javascript code. These changes are 'persistent' in a way that starting a fresh rhino instance still uses this changed object.
+*     various fixes for array calls using this pattern Array.prototype.foo.call(null, ....);
+*     fix issue #648
+*     fix Object.getOwnPropertyDescriptor for index properties on native strings
+*     Function.__proto__ ignores write access
+*     improved regexp parser based on commit 2164382abe078ea2024b9dff7fe416a78e3a668f from anba
+*     fix handling of undefined parameter value in String.normalize()
+*     it should not be possible to change the [[Prototype]]  of a non-extensible object; some cleanup
+*     add version guard
+*     fix all this-value-not-obj-coercible.js tests for string
+*     checkstyle fixes
+*     fix test suite setup
+*     use the RangeError construction helper
+*     improved handling of negative ArrayBuffer size fixes #708
+*     in ES6 TypedArray constructors are only callable via new
+*     avoid some auto boxing use Double.valueOf instead of new some cleanup try to optimize the code a bit to avoid unnecessary conversations and Double object creation make some methods static
+*     regular expressions are not functions in the context of string replace fixes #726
+*     improved regex range handling
+*     do not inherit strict mode when parsing a function body
+*     code style fix
+*     fix wrong start object for getter in Object.assign
+*     use Undefined.isUndefined()
+*     String.prototype[Symbol.iterator].call(undefined) has to throw because undefined is not coercible
+*     enable more test cases
+*     reduce auto boxing to be able to better control this and avoid boxing if possible
+*     make a bunch  of methods static
+*     code cleanup
+*     make the inner class static (this makes also SpotBugs happy)
+*     Object.setPrototypeOf() arg[0] has to be coercible
+*     fix one more case
+*     match
+*     search
+*     throw if the lastIndex prop of an regex is readonly
+
+# Rhino 1.7.12
+## January 13, 2020
+
+### XML external entities disabled by default
+
+As of this release, Rhino makes "XML external entity injections" more difficult
+by disabling fetching of external DTDs and stylesheets by default,
+as recommended in the [OWASP Cheat Sheet](https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.md). 
+Even though this may break some existing projects, the fact that this
+vulnerability is in the OWASP top 10 makes it important enough to change
+the default.
+
+Developers who still need this old capability can re-enable it by setting the
+Context feature flag FEATURE_ENABLE_XML_SECURE_PARSING to false. (The default
+is true.)
+
+### New JAR for embedding use cases
+
+This release also includes a second JAR artifact, "rhino-runtime.jar". This is
+simply the existing Rhino JAR with the "tools" source directory excluded. 
+This directory includes the Rhino shell as well as the default "Global" 
+object, which includes capabilities to load and process external source
+code.
+
+Since some automated source-scanning tools mark these capabilties as insecure,
+this new JAR provides a way to only include the parts of Rhino that embedders
+typically need without pulling in additional capabilities.
+
+Developers who typically embed "rhino.jar" might consider embedding "rhino-runtime.jar"
+instead if they do not need all this.
+
+Thanks to the following developers for the contributions below!
+
+Aditya Pal (1):
+*     Fix syntax error for comments in array (#607)
+
+Chris Smith (1):
+*     Adding secure configuration for XML parsers (#600)
+
+Gregory Brail (12):
+*     Update versions for 1.7.12 release.
+*     Fix a code generation bug for generators.
+*     Fix "fall through" comment.
+*     Fix static analysis around NaN values.
+*     More isNaN fixes and one rounding bug.
+*     Make XML processor configuration more robust.
+*     Enable SpotBugs plugin.
+*     Fix minor static analysis findings.
+*     Increase Travis timeout.
+*     Disable more flaky "BigO" tests.
+*     Fix handling of "return" in iterators.
+*     Undo setting some members "final".
+
+Ivan Di Francesco (1):
+*     Fix warnings (#596)
+
+Roland Praml (2):
+*     FIX: NativeJavaObject.getDefaultValue recognizes numbers correctly
+*     #511 fixing InterfaceAdapter abstract name lookup.
+
+Stijn Kliemesch (7):
+*     Private static method ScriptRuntime.enumInitOrder(Context,IdEnumeration) no longer expects given IdEnumeration's property obj to be of type ScriptableObject specifically, only of type SymbolScriptable.
+*     Added testclass IterableTest to test iterable implementations, currently with one testcase for a host object, specifically one that uses Array Iterator.
+*     Added more tests to IterableTest.
+*     Fix for #616 (#617)
+*     Fixes for calling several Object.prototype members.
+*     Fixed dynamic scoping for implementations of Object.create and Object.defineProperties
+*     Testcase for dynamic scoping and Object.create.
+
+nename0 (2):
+*     Fix Array.include return a wrapped Boolean
+*     implement Array.includes to align to specs
+
+RBRi (20):
+*     fix for Map/Set working with ConsString as key also; closes #583
+*     fix propertyIsEnumerable when using an index to access string; closes #582
+*     ignore surplus search/match/replace parameters; closes #581
+*     add support for setPrototypeOf
+*     fixed imports
+*     RangeError should be throw if the argument of Number.prototype.toFixed is less than 0 fixes #587
+*     fix interpreter fallback when using streams (fixes #592)
+*     Parser already always reads the reader into a string. Move this reader handling to the Context to be able to fall back to the interpreter in all cases.
+*     fix imports
+*     functions declared as var f = function f() {...} within a function should not impact higher scope variable with the same name
+*     functions declared as var f = function f() {...} within a function should not impact higher scope variable with the same name
+*     fix Boolean(document.all)
+*     many more tests are passing already and some cleanup
+*     add tests for built-ins/ThrowTypeError and built-ins/TypedArray
+*     add tests for built-ins/TypedArrays
+*     fix BYTES_PER_ELEMENT property
+*     fix BYTES_PER_ELEMENT prototype property
+*     fix TypedArray constructor arity
+*     Fix issue with parseInt's handling of leading zeroes
+*     #529 (#628)
+
+# Rhino 1.7.11
+## May 30, 2019
+
+This release includes implementations of a number of missing JavaScript language features,
+including:
+
+* Improvement to the accuracy and reliability of the parser and its associated AST.
+* The Map, Set, WeakMap, and WeakSet classes.
+* More Array functions, including from, of, fill, keys, values, entries, and copyWithin.
+* Many more Math methods.
+* More Object functions, including seal and freeze.
+* Many other bug fixes, as shown below.
+
+In general, Rhino's philosophy for new features and changes is to
+follow the ECMAScript spec, but to use the "language version" on the Context class
+when backward compatibility would be broken.
+
+For example, the Array.prototype.concat function in older versions of Rhino would treat
+any input value as "spreadable" if it has the same constructor as Array. ECMAScript now says
+clearly that this should only happen if the "isConcatSpreadable" symbol is present. In
+this release, the old behavior is disable when the language level is at least the
+"ES6" level (Context.VERSION_ES6, or 200).
+
+Developers working on new code will be happier if they set the language level to
+CONTEXT.VERSION_ES6, or use the "-version 200" flag to the command line tool.
+
+A future release will change the default language version of the command line tool.
+
+This release contains contributions from 15 developers. Thanks for all your hard work!
+
+Attila Szegedi (7):
+*     Improvements to MemberBox (#438)
+*     Labmdify usages of ContextAction
+*     Make ContextAction generic.
+*     API for comparing continuation implementations
+*     Algorithm for structural equality comparison of object graphs
+*     Use structural equality as the equality algorithm for Interpreter.CallFrame, which serves as the NativeContinuation implementation.
+*     Add workarounds for #437 and #449
+
+Dimitar Nestorov (1):
+*     Update README.md
+
+Dirk Hogan (1):
+*     431 update expiry of cached commonjs entity if no change on filesystem
+
+Gregory Brail (18):
+*     Prepare for next iteration.
+*     Support replacing prototype functions of native objects.
+*     Fix NullPointerException in __defineGetter__
+*     Fix a problem with standard objects that have Symbols in their  prototypes.
+*     Implement the built-in Set and Map classes for ES6.
+*     Add WeakMap and WeakSet on top of the Map and Set work.
+*     Upgrade max heap for Gradle tests to 1 GB.
+*     Test cases and a small fix for native arrays.
+*     Implement @@isConcatSpreadable and make Java arrays spreadable
+*     Code review comments for @@isConcatSpreadable.
+*     Make the "Sorting" helper class a proper singleton.
+*     Un-do recent addition to the Scriptable interface.
+*     Update Gradle wrapper version.
+*     Fix flag tests that assume Context is available.
+*     Fix a parser bug with missing semicolon warnings.
+*     Fix a regression introduced recently to MemberBox.
+*     More compatibility fixes for Array.prototype.concat.
+*     Work on Array.of, from, and copyWithin.
+*     Fix a parsing regression.
+
+Igor Kuzmanenko (2):
+*     fixes XmlMemberGet toSource implementation (#483)
+*     fixes position for ParenthesizedExpression nodes (#129)
+
+Markus Sunela (1):
+*     Add manual OSGi manifest
+
+Mozilla-GitHub-Standards (1):
+*     Add Mozilla Code of Conduct file
+
+Nedelcho Delchev (1):
+*     Update README.md
+
+RBRi (2):
+*     some fixes/enhancements for the typed array support (#436)
+*     Array fixes (#467)
+*     fix all javadoc errors and all javadoc html warnings
+*     method Global#version(xxx) should return the new version identifier if the version was updated
+*     add more info to the error message
+*     us the right method name if available
+*     two minor improvements from HtmlUnit code * window list is sorted * Command 'Go to line' added
+*     avoid npe if no file window is available
+*     improve the design for flexible subclassing
+*     remove duplicated check
+*     fix the isSymbol detection to no longer detect the prototype as symbol
+*     we have many more 262 tests passing already - i think we have to use as many tests as possible to check our quality
+*     and some more; now we are at 51093
+*     Use as many test262 tests as possible to check our quality
+*     implement missing Math functions
+*     disable some slow tests
+*     Support for `arguments` object as TypedArray constructor argument this is the same as #297 but includes a simple test.
+*     fix issue 437
+*     use the system line separator for code generation
+*     remove work around for 437
+*     fix #449 also and remove the work around from EqualObjectGraphs
+*     add @Override and some more cleanup
+*     fix ctor called with date arg
+*     valueOf has to be called without any args
+*     fix remaining utc constructor case
+*     minor cleanup
+*     fix native array constructor called with null and same for the setter
+*     code cleanup based on eclipse Photon suggestions
+*     add more delegate methods to MemberBox; name all delegate method using the name of the delegated method
+*     avoid star imports across the codebase
+*     fall back to the interpreter if the byte code generation fails
+*     fix serialization for NativeMap, NativeSet, NativeWeakMap, and NativeWeakSet
+*     scope is only undefined in strict mode; fix special null entries for maps
+*     more config cleanup - use files for excluding; again enable a bunch of tests already running
+*     another VMBridge cleanup step (JDK 1.8 is the minimum at the moment)
+*     another map fix
+*     more detailed tests hack to dump already passing tests exclude one more class of tests more tests are passing
+*     next try to make the travis build pass
+*     array.fill
+*     array.keys, array.entries, array.values
+*     fixes for DataView, including enabling more test cases.
+*     fix freeze/preventExtensions/seal/isFrozen/isExtensible/isSealed for ES6
+*     add padStart and padEnd
+*     make serialVersionUID private
+*     make the test pass on my machine (also from inside eclipse)
+*     fix null/undefined handling add first array includes impl
+*     fix some array length handling border cases
+*     NativeArray cleanup more error output for Test262SuiteTest
+*     fix for #531 - using a symbol as array index crashes with a class cast exception
+*     Update Jacoco version
+*     functions are valid keys for WeakMap/WeakSet
+*     use valueOf
+*     cleanup vm bridge; since we are at java 8 there is no need to check for iterator availability
+*     cleanup member; we are using the executable type instead of member
+*     fix unused import
+*     another jdk check no longer required
+*     fix build
+*     add (modified) test case from #135
+*     first simple version of copyWithin
+*     first array.of impl
+
+Raphaël Jakse (1):
+*     Test function arity and length properties
+
+Ravi Kishore (1):
+*     Retain of comments and their position in the actual code after parsing. (#465)
+
+Stijn Kliemesch (1):
+*     Added testcase for #510
+
+Sébastien Doeraene (2):
+*     Fix #448: Correctly wrap the result of Math.imul as an Int32.
+*     Fix the conversions in typedarrays.Conversions.
+
+Travis Haagen (2):
+*     Fix bug that caused modified JavaScript files to never be reloaded
+*     Created UrlModuleSourceProviderTest
+
+nabice (2):
+*     Fix #533 AstNode.setParent() causes a position error
+*     test for #533
+
+raphj (1):
+*     Override getArity
+
+stijnkliemesch (1):
+*     Fixes Parser.throwStatement()
+
+# Rhino 1.7.10
+## April 9, 2018
+
+This release fixes a regression introduced in version 1.7.7.2 that caused the
+"propertyIsEnumerable" to throw an exception when used with String and typed array objects,
+and possibly with custom user-written objects as well.
+
+[Issue 415](https://github.com/mozilla/rhino/issues/415)
+
+It contains a few other fixes:
+
+Attila Szegedi (2):
+*     Make as many CallFrame fields as possible final, initialize them in constructor
+*     frame.debuggerFrame != null || frame.idata.itsNeedActivation is identical to frame.useActivation.
+
+Jeremy Whitlock (1):
+*     Missing properties are not enumerable when checking enumerability
+
+# Rhino 1.7.9
+## March 15, 2018
+
+This release fixes a [potential ArrayIndexOutOfBoundsException](https://github.com/mozilla/rhino/issues/390)
+that was introduced in 1.7.8. Since it's potentially pretty serious, projects currently using 1.7.8
+should switch to this new release.
+
+[Issue 390](https://github.com/mozilla/rhino/issues/390)
+
+In addition, there is a new flag on Context called "FEATURE_INTEGER_WITHOUT_DECIMAL_PLACE."
+If set, Rhino will work harder to display numbers in integer form rather than in floating-point
+form. This feature is currently disabled by default, although if it proves popular than we can
+consider enabling it in the future.
+
+[PR 398](https://github.com/mozilla/rhino/pull/398)
+
+At language level "ES6" and above, ToNumber conversion is now more compliant to the spec. (This
+change is disabled for older language levels to prevent a problem with backward compatibility.)
+
+[PR 383](https://github.com/mozilla/rhino/pull/383)
+
+Finally, there are a number of other fixes.
+
+Thanks to all who contributed, both with issues and with code!
+
+Attila Szegedi:
+*     Fix a JavaDoc warning
+
+Ivan Vyshnevskyi:
+*     Make ToNumber(String) conversion more spec-compliant
+*     Report parsing error for default values in destructuring assignments
+
+Michael[tm] Smith:
+*     Add addError(String messageId, int c) method
+*     Add “illegal character” test to ParserTest
+*     Show word in “identifier is a reserved word” error
+*     Add “identifier is a reserved word” test
+
+Oleksandr Maksymenko:
+*     changes to process integer object as integer and long as long, not as double
+
+RBRi:
+*     cleanup the code an try to make it faster (#373)
+
+jhertel:
+*     Correction: Compatability → Compatibility
+
+# Rhino 1.7.8
+## January 22, 2018
+
+Most important changes in this release:
+
+* JavaScript objects are no longer (somewhat) thread-safe by default
+* Rhino is resistant to "hash flooding" attacks
+* Rhino is only supported for Java 8 and up
+* Rhino only builds with Gradle.
+
+The primary change in this release is that the object storage format has changed
+for objects derived from ScriptableObject (which is nearly all objects).
+
+First, objects are no longer thread-safe by default. (They were thread-safe previously, but
+not in a way that we could prove was 100 percent correct in all cases.) We do not believe
+that the vast majority of Rhino code depended on this capability. 
+
+The feature flag Context.FEATURE_THREAD_SAFE_OBJECTS may be used to enable locking on all
+objects by default in case it is needed. Furthermore, the built-in "sync" function is still
+supported, which can be used to wrap a function in a similar way to the "synchronized" keyword
+in Java.
+
+Second, when an object grows to a large number of properties, the native hash table implementation
+is replaced with java.util.HashMap. This more complex (but slightly slower) hash implementation
+is resistant to hash collisions. This makes Rhino in general resistant to "hash flooding" attacks.
+
+Rhino now depends on Java 8. It also works on Java 9, although a few tests are currently breaking
+around Date parsing and UTF-8 encoding.
+
+Additional changes:
+
+[Issue 290](https://github.com/mozilla/rhino/issues/290) Resist hash flooding attacks
+[Issue 303](https://github.com/mozilla/rhino/issues/303) Arrow function position set error
+[Issue 323](https://github.com/mozilla/rhino/issues/323) Possible OutOfMemory due to
+infinite loop on parsing
+[Issue 341](https://github.com/mozilla/rhino/issues/341) Objects are only thread-safe when
+feature is enabled
+[Issue 351](https://github.com/mozilla/rhino/issues/351) Function-level use-strict breaks
+backward compatibility
+[Issue 357](https://github.com/mozilla/rhino/issues/357) Array.sort() can throw
+ArrayIndexOutOfBoundsException
+[Issue 295](https://github.com/mozilla/rhino/issues/295) Change WrapFactory to only wrap
+"true" primitive types and not subclasses.
+[Issue 377](https://github.com/mozilla/rhino/issues/377) Context initialization in 
+"sealed" mode failed for ES6 language level.
+[PR102](https://github.com/mozilla/rhino/pull/102) Fix regexp parsing for "/0{0/"
+[PR108](https://github.com/mozilla/rhino/pull/108) Attach jsdoc nodes to function params.
+[PR 169](https://github.com/mozilla/rhino/pull/169) Enable calling default method
+on Java 8.
+[PR322](https://github.com/mozilla/rhino/pull/322) Fix static array functions
+[PR353](https://github.com/mozilla/rhino/pull/353) Member box call error.
+[PR355](https://github.com/mozilla/rhino/pull/358) Support array-like parameters to 
+Function.prototype.apply().
+[PR372](https://github.com/mozilla/rhino/pull/372) Improve test262 integration and enable
+many more tests.
+
+# Rhino 1.7.7.2
+## August 24, 2017
+
+This release contains fixes for a few important bugs that have caught Rhino users out in the
+field.
+
+* Do not throw a Java exception from array.prototype.sort() no matter how weird the user-supplied
+comparator function is. This is a major difference between JavaScript and Java and has caused
+us to avoid using "Arrays.sort" on JavaScript arrays.
+* Fix incorrect offsets in the "DataView" class.
+
+It also includes several other fixes:
+
+* Always append a column number to V8-style stack traces. (Unfortunately it is always "0".)
+* Support Object.is and Object.assign.
+* Make the Symbol implementation match the spec (for VERSION_ES6 and up only).
+* Avoid throwing internal Java exceptions for certain native objects in "toJSON".
+* Allow subclassing of ContinuationPending.
+* For VERSION_ES6 and up, sort properties in the spec-defined order (int property names
+first).
+* Fix stack overflow in string concatenation.
+* Improve performance of ConsString.toString
+
+The next release is likely to be 1.7.8.
+
 # Rhino 1.7.7.1
-## February 1, 2016
+## February 2, 2016
 
 This release fixes a few critical bugs that were affecting code in the field:
 
